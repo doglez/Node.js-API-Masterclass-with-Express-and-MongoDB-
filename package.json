@@ -1,0 +1,35 @@
+{
+  "name": "node.js-api-masterclass-with-express-and-mongodb",
+  "version": "1.0.0",
+  "description": "Node.js API Masterclass with Express and MongoDB",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "NODE_ENV=production node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/doglez/node.js-api-masterclass-with-express-and-mongodb.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "api",
+    "javascript"
+  ],
+  "author": "Danilo Gonzalez",
+  "license": "MTI",
+  "bugs": {
+    "url": "https://gitlab.com/doglez/node.js-api-masterclass-with-express-and-mongodb/issues"
+  },
+  "homepage": "https://gitlab.com/doglez/node.js-api-masterclass-with-express-and-mongodb#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
