@@ -1,12 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
-import bootcamps from "./routes/bootcamps.js";
+import bootcampsRouter from "./routes/bootcampsRouter.js";
 
 dotenv.config({ path: "./.env" });
 
 const app = express();
 
-app.use("/api/v1/bootcamps", bootcamps);
+app.use("/api/v1/bootcamps", bootcampsRouter);
 
 const PORT = process.env.PORT || 5000;
 
