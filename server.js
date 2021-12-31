@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import colors from "colors";
+import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/connectDB.js";
 import bootcampsRouter from "./routes/bootcampsRouter.js";
 import logger from "./middleware/logger.js";
@@ -22,6 +23,8 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/v1/bootcamps", bootcampsRouter);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,3 +1,4 @@
+import ErrorResponse from "../utilis/ErrorResponse.js";
 import Bootcamp from "../models/Bootcamp.js";
 
 /**
@@ -17,10 +18,7 @@ export const index = async (req, res, next) => {
       data: bootcamps,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -36,15 +34,18 @@ export const show = async (req, res, next) => {
   try {
     const bootcamp = await Bootcamp.findById(req.params.id);
 
+    if (!bootcamp) {
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
+    }
+
     res.status(200).json({
       success: true,
       data: bootcamp,
     });
   } catch (error) {
-    res.status(404).json({
-      success: false,
-      message: "Bootcamp not found",
-    });
+    next(error);
   }
 };
 
@@ -65,10 +66,7 @@ export const store = async (req, res, next) => {
       data: bootcamp,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -86,15 +84,19 @@ export const update = async (req, res, next) => {
       new: true,
       runValidators: true,
     });
+
+    if (!bootcamp) {
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
+    }
+
     res.status(200).json({
       success: true,
       data: bootcamp,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -108,17 +110,19 @@ export const update = async (req, res, next) => {
  */
 export const destroy = async (req, res, next) => {
   try {
-    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id, {
-      rawResult: true,
-    });
+    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+
+    if (!bootcamp) {
+      return next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
+    }
+
     res.status(200).json({
       success: true,
       data: bootcamp.value,
     });
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
