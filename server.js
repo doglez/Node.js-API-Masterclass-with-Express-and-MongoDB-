@@ -5,7 +5,6 @@ import colors from "colors";
 import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/connectDB.js";
 import bootcampsRouter from "./routes/bootcampsRouter.js";
-import logger from "./middleware/logger.js";
 
 dotenv.config({ path: "./.env" });
 
