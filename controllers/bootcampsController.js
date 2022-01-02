@@ -33,7 +33,10 @@ export const index = asyncHandler(async (req, res, next) => {
   );
 
   // Finding resource
-  query = Bootcamp.find(JSON.parse(queryString));
+  query = Bootcamp.find(JSON.parse(queryString)).populate({
+    path: "courses",
+    select: "title description",
+  });
 
   // SELECT FIELDS
   if (req.query.select) {
@@ -161,13 +164,15 @@ export const update = asyncHandler(async (req, res, next) => {
  * @param {*} next
  */
 export const destroy = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+  const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
     return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
     );
   }
+
+  bootcamp.remove();
 
   res.status(200).json({
     success: true,
