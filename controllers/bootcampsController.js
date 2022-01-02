@@ -12,7 +12,18 @@ import geocoder from "../utilis/geocoder.js";
  * @param {*} next
  */
 export const index = asyncHandler(async (req, res, next) => {
-  const bootcamps = await Bootcamp.find();
+  let query;
+  let queryString = JSON.stringify(req.query);
+
+  // Referencia https://docs.mongodb.com/manual/reference/operator/query-comparison/
+  queryString = queryString.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
+  query = Bootcamp.find(JSON.parse(queryString));
+
+  const bootcamps = await query;
 
   return res.status(200).json({
     success: true,
