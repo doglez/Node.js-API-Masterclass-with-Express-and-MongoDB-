@@ -13,15 +13,41 @@ import geocoder from "../utilis/geocoder.js";
  */
 export const index = asyncHandler(async (req, res, next) => {
   let query;
-  let queryString = JSON.stringify(req.query);
 
-  // Referencia https://docs.mongodb.com/manual/reference/operator/query-comparison/
+  // Copy req.query
+  const reqQuery = { ...req.query };
+
+  // Fields to exclude
+  const removeFields = ["select", "sort"];
+
+  // Loop over removeFields and delete then from reqQuery
+  removeFields.forEach((params) => delete reqQuery[params]);
+
+  // Create query string
+  let queryString = JSON.stringify(reqQuery);
+
+  // Create operators ($gt, $gte, etc) Referencia https://docs.mongodb.com/manual/reference/operator/query-comparison/
   queryString = queryString.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
   );
 
+  // Finding resource
   query = Bootcamp.find(JSON.parse(queryString));
+
+  // SELECT FIELDS
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    query = query.select(fields);
+  }
+
+  // Sort
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    query = query.sort(sortBy);
+  } else {
+    query = query.sort("createdAt");
+  }
 
   const bootcamps = await query;
 
