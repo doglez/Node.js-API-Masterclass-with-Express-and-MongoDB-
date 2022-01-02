@@ -5,6 +5,7 @@ import colors from "colors";
 import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/connectDB.js";
 import bootcampsRouter from "./routes/bootcampsRouter.js";
+import coursesRouter from "./routes/coursesRouter.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -21,7 +22,9 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// Routes
 app.use("/api/v1/bootcamps", bootcampsRouter);
+app.use("/api/v1/courses", coursesRouter);
 
 app.use(errorHandler);
 
