@@ -9,6 +9,7 @@ import {
 
 const coursesRouter = express.Router({ mergeParams: true });
 
-coursesRouter.route("/").get(index);
+coursesRouter.route("/").get(index).post(store);
+coursesRouter.route("/:id").get(show);
 
 export default coursesRouter;
