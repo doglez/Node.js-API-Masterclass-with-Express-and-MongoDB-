@@ -95,7 +95,23 @@ export const store = asyncHandler(async (req, res, next) => {
  * @param {*} res
  * @param {*} next
  */
-export const update = asyncHandler(async (req, res, next) => {});
+export const update = asyncHandler(async (req, res, next) => {
+  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!course) {
+    return next(
+      new ErrorResponse(`Course not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    data: course,
+  });
+});
 
 /**
  * Delete a course
@@ -105,4 +121,18 @@ export const update = asyncHandler(async (req, res, next) => {});
  * @param {*} res
  * @param {*} next
  */
-export const destroy = asyncHandler(async (req, res, next) => {});
+export const destroy = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.id);
+
+  if (!course) {
+    return next(
+      new ErrorResponse(`Course not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  course.remove();
+
+  res.status(200).json({
+    success: true,
+  });
+});
