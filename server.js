@@ -8,6 +8,7 @@ import bootcampsRouter from "./routes/bootcampsRouter.js";
 import coursesRouter from "./routes/coursesRouter.js";
 import fileUpload from "express-fileupload";
 import path from "path";
+import authRouter from "./routes/authRouter.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use("/api/v1/bootcamps", bootcampsRouter);
 app.use("/api/v1/courses", coursesRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.use(errorHandler);
 
