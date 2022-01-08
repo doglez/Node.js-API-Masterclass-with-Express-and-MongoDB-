@@ -33,7 +33,9 @@
     "mongoose": "^6.1.4",
     "morgan": "^1.10.0",
     "node-geocoder": "^3.28.0",
-    "slugify": "^1.6.4"
+    "slugify": "^1.6.4",
+    "jsonwebtoken": "^8.5.1",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
