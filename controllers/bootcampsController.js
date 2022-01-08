@@ -1,7 +1,11 @@
+import dotenv from "dotenv";
 import ErrorResponse from "../utilis/ErrorResponse.js";
 import Bootcamp from "../models/Bootcamp.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import geocoder from "../utilis/geocoder.js";
+import path from "path";
+
+dotenv.config({ path: "./env" });
 
 /**
  * Get all bootcamps
@@ -208,5 +212,60 @@ export const getBootcampsInRadius = asyncHandler(async (req, res, next) => {
     success: true,
     count: bootcamps.length,
     data: bootcamps,
+  });
+});
+
+/**
+ * Upload photo for bootcamp
+ * @route PUT /api/v1/bootcamps/:id/photo
+ * @access Private
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const photoUpload = asyncHandler(async (req, res, next) => {
+  const bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
+    return next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  if (!req.files) {
+    return next(new ErrorResponse(`Please upload a photo`, 400));
+  }
+
+  const file = req.files.file;
+
+  // Make sure the image is a photo
+  if (!file.mimetype.startsWith("image")) {
+    return next(new ErrorResponse(`Please upload an image file`, 400));
+  }
+
+  // Check file size
+  if (file.size > process.env.MAX_FILE_UPLOAD) {
+    return next(
+      new ErrorResponse(
+        `The image must have less than ${process.env.MAX_FILE_UPLOAD}`,
+        400
+      )
+    );
+  }
+
+  // Create custom filename
+  file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (error) => {
+    if (error) {
+      console.error(error);
+      return next(new ErrorResponse(`Problem with file upload`, 500));
+    }
+
+    await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
+    res.status(200).json({
+      success: true,
+      data: bootcamp,
+    });
   });
 });

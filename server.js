@@ -6,6 +6,8 @@ import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/connectDB.js";
 import bootcampsRouter from "./routes/bootcampsRouter.js";
 import coursesRouter from "./routes/coursesRouter.js";
+import fileUpload from "express-fileupload";
+import path from "path";
 
 dotenv.config({ path: "./.env" });
 
@@ -21,6 +23,13 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+// File uploading
+app.use(fileUpload());
+
+// Set static folder
+const __dirname = process.cwd();
+app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/api/v1/bootcamps", bootcampsRouter);
