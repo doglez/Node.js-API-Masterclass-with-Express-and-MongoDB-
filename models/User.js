@@ -1,5 +1,9 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./env" });
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -37,10 +41,17 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// Encrypt password using bycrytp
+// Encrypt password using bcrypt
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+// Sign JWT and return
+UserSchema.methods.getSignedJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
 
 export default mongoose.model("User", UserSchema);
