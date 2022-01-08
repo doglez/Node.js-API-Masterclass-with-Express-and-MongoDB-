@@ -21,6 +21,7 @@ const UserSchema = new mongoose.Schema({
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please add a valid email",
     ],
+    lowercase: true,
   },
   role: {
     type: String,
@@ -45,6 +46,17 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Standarization for name uppercase the first character of each word
+UserSchema.pre("save", async function (next) {
+  const splitStr = this.name.toLowerCase().split(" ");
+  for (let i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+
+  this.name = splitStr.join(" ");
 });
 
 // Sign JWT and return
