@@ -8,13 +8,18 @@ import {
   getBootcampsInRadius,
   photoUpload,
 } from "../controllers/bootcampsController.js";
+import advancedResults from "../middleware/advancedResults.js";
+import Bootcamp from "../models/Bootcamp.js";
 
 // Include other resource routers
 import coursesRouter from "./coursesRouter.js";
 
 const bootcampsRouter = express.Router();
 
-bootcampsRouter.route("/").get(index).post(store);
+bootcampsRouter
+  .route("/")
+  .get(advancedResults(Bootcamp, "courses"), index)
+  .post(store);
 bootcampsRouter.route("/:id").get(show).put(update).delete(destroy);
 bootcampsRouter.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 bootcampsRouter.route("/:id/photo").put(photoUpload);
