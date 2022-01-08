@@ -50,13 +50,13 @@ UserSchema.pre("save", async function (next) {
 
 // Standarization for name uppercase the first character of each word
 UserSchema.pre("save", async function (next) {
-  const splitStr = this.name.toLowerCase().split(" ");
+  const splitStr = await this.name.toLowerCase().split(" ");
   for (let i = 0; i < splitStr.length; i++) {
     splitStr[i] =
       splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
 
-  this.name = splitStr.join(" ");
+  this.name = await splitStr.join(" ");
 });
 
 // Sign JWT and return
@@ -64,6 +64,11 @@ UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
+};
+
+// Match user entered password to hashed password in database
+UserSchema.methods.matchPassword = function (enteredPassword) {
+  return bcrypt.compare(enteredPassword, this.password);
 };
 
 export default mongoose.model("User", UserSchema);
