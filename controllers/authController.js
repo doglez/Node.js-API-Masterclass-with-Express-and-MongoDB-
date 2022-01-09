@@ -59,6 +59,49 @@ export const login = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * Get current logged in user
+ * @route GET /api/v1/auth/me
+ * @access Private
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+/**
+ * Forgot password
+ * @route POST /api/v1/auth/forgotpassword
+ * @access Public
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return next(new ErrorResponse(`There is no user with that email`, 404));
+  }
+
+  // Get reset token
+  const resetToken = user.getResetPasswordToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+/**
  * Get token from model, create cookie
  * @param {*} user
  * @param {*} statusCode
@@ -84,20 +127,3 @@ const sendTokenResponse = (user, statusCode, res) => {
     token,
   });
 };
-
-/**
- * Get current logged in user
- * @route GET /api/v1/auth/me
- * @access Private
- * @param {*} req
- * @param {*} res
- * @param {*} next
- */
-export const getMe = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
-});

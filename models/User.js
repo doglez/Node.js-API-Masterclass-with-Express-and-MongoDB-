@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import crypto from "crypto";
 // import dotenv from "dotenv";
 
 // dotenv.config({ path: "./env" });
@@ -35,7 +36,7 @@ const UserSchema = new mongoose.Schema({
     select: false,
   },
   resetPasswordToken: String,
-  resetPpasswordExpiration: Date,
+  resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -44,6 +45,10 @@ const UserSchema = new mongoose.Schema({
 
 // Encrypt password using bcrypt
 UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -69,6 +74,23 @@ UserSchema.methods.getSignedJwtToken = function () {
 // Match user entered password to hashed password in database
 UserSchema.methods.matchPassword = function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.password);
+};
+
+// Gereate and hash password token
+UserSchema.methods.getResetPasswordToken = function () {
+  // Generate token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  // Has token and set to resetPasswordToken field
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set expire
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 export default mongoose.model("User", UserSchema);
