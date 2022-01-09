@@ -39,6 +39,11 @@ const CourseSchema = new mongoose.Schema({
     ref: "Bootcamp",
     required: true,
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 // Static method to get avg of coruse tuitions
