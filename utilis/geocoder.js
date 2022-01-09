@@ -1,7 +1,7 @@
 import NodeGeocoder from "node-geocoder";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 
-// dotenv.config({ path: "./.env" });
+dotenv.config({ path: "./.env" });
 
 const options = {
   provider: process.env.GEOCODER_PROVIDER,
