@@ -84,3 +84,20 @@ const sendTokenResponse = (user, statusCode, res) => {
     token,
   });
 };
+
+/**
+ * Get current logged in user
+ * @route GET /api/v1/auth/me
+ * @access Private
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});

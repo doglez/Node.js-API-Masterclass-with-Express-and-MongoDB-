@@ -7,6 +7,7 @@ import {
   update,
 } from "../controllers/coursesController.js";
 import advancedResults from "../middleware/advancedResults.js";
+import protect from "../middleware/auth.js";
 import Course from "../models/Course.js";
 
 const coursesRouter = express.Router({ mergeParams: true });
@@ -20,7 +21,11 @@ coursesRouter
     }),
     index
   )
-  .post(store);
-coursesRouter.route("/:id").get(show).put(update).delete(destroy);
+  .post(protect, store);
+coursesRouter
+  .route("/:id")
+  .get(show)
+  .put(protect, update)
+  .delete(protect, destroy);
 
 export default coursesRouter;

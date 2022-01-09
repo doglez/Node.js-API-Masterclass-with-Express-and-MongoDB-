@@ -9,6 +9,7 @@ import {
   photoUpload,
 } from "../controllers/bootcampsController.js";
 import advancedResults from "../middleware/advancedResults.js";
+import protect from "../middleware/auth.js";
 import Bootcamp from "../models/Bootcamp.js";
 
 // Include other resource routers
@@ -19,10 +20,14 @@ const bootcampsRouter = express.Router();
 bootcampsRouter
   .route("/")
   .get(advancedResults(Bootcamp, "courses"), index)
-  .post(store);
-bootcampsRouter.route("/:id").get(show).put(update).delete(destroy);
+  .post(protect, store);
+bootcampsRouter
+  .route("/:id")
+  .get(show)
+  .put(protect, update)
+  .delete(protect, destroy);
 bootcampsRouter.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
-bootcampsRouter.route("/:id/photo").put(photoUpload);
+bootcampsRouter.route("/:id/photo").put(protect, photoUpload);
 
 // Re-route into other resources
 bootcampsRouter.use("/:bootcampId/courses", coursesRouter);
