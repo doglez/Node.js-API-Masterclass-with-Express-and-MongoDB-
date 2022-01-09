@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 // Protect routes
-const protect = asyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
   if (
@@ -26,8 +26,6 @@ const protect = asyncHandler(async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log(decoded);
-
     req.user = await User.findById(decoded.id);
 
     next();
@@ -36,4 +34,16 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export default protect;
+export const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ErrorResponse(
+          `User role ${req.user.role} is unathorized to access this route`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};
