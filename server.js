@@ -9,6 +9,7 @@ import coursesRouter from "./routes/coursesRouter.js";
 import fileUpload from "express-fileupload";
 import path from "path";
 import authRouter from "./routes/authRouter.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config({ path: "./.env" });
 
@@ -19,6 +20,9 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+
+// Cookie parser
+app.use(cookieParser);
 
 //Dev loggin middleware
 if (process.env.NODE_ENV === "development") {

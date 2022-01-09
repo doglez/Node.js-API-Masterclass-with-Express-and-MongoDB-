@@ -1,6 +1,9 @@
 import ErrorResponse from "../utilis/ErrorResponse.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/User.js";
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./env" });
 
 /**
  * Register User
@@ -21,13 +24,7 @@ export const register = asyncHandler(async (req, res, next) => {
     role,
   });
 
-  // Create token
-  const token = user.getSignedJwtToken();
-
-  res.status(201).json({
-    success: true,
-    token,
-  });
+  sendTokenResponse(user, 200, res);
 });
 
 /**
@@ -58,11 +55,22 @@ export const login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Invalid credentials`, 401));
   }
 
+  sendTokenResponse(user, 200, res);
+});
+
+const sendTokenResponse = (user, statusCode, res) => {
   // Create token
   const token = user.getSignedJwtToken();
 
-  res.status(201).json({
+  const options = {
+    expires: new Date(
+      Date.now + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  res.status(statusCode).cookie("token", token, options).json({
     success: true,
     token,
   });
-});
+};
