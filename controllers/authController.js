@@ -2,6 +2,7 @@ import ErrorResponse from "../utilis/ErrorResponse.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/User.js";
 import sendEmail from "../utilis/sendEmail.js";
+import crypto from "crypto";
 // import dotenv from "dotenv";
 
 // dotenv.config({ path: "./env" });
@@ -123,6 +124,41 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
 
     return next(new ErrorResponse(`Email could not be sent`, 500));
   }
+});
+
+/**
+ * Reset password
+ * @route PUT /api/v1/auth/resetpassword/:resettoken
+ * @access Public
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  // Get hashed token
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resettoken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new ErrorResponse(`Invalid token`, 400));
+  }
+
+  // Set new password
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
 });
 
 /**
