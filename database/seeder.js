@@ -1,11 +1,11 @@
 import fs from "fs";
 import mongoose from "mongoose";
 import colors from "colors";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import Bootcamp from "../models/Bootcamp.js";
 import Course from "../models/Course.js";
 
-dotenv.config({ path: "./.env" });
+// dotenv.config({ path: "./.env" });
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URL, {

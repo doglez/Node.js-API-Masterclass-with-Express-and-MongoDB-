@@ -1,9 +1,9 @@
 import ErrorResponse from "../utilis/ErrorResponse.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/User.js";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-dotenv.config({ path: "./env" });
+// dotenv.config({ path: "./env" });
 
 /**
  * Register User

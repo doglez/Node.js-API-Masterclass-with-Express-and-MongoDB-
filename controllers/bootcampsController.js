@@ -1,11 +1,11 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import ErrorResponse from "../utilis/ErrorResponse.js";
 import Bootcamp from "../models/Bootcamp.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import geocoder from "../utilis/geocoder.js";
 import path from "path";
 
-dotenv.config({ path: "./env" });
+// dotenv.config({ path: "./env" });
 
 /**
  * Get all bootcamps
