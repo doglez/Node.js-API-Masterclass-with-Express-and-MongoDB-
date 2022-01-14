@@ -14,6 +14,7 @@ import Bootcamp from "../models/Bootcamp.js";
 
 // Include other resource routers
 import coursesRouter from "./coursesRouter.js";
+import reviewsRouter from "./reviewsRouter.js";
 
 const bootcampsRouter = express.Router();
 
@@ -33,5 +34,6 @@ bootcampsRouter
 
 // Re-route into other resources
 bootcampsRouter.use("/:bootcampId/courses", coursesRouter);
+bootcampsRouter.use("/:bootcampId/reviews", reviewsRouter);
 
 export default bootcampsRouter;

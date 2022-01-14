@@ -11,6 +11,7 @@ import path from "path";
 import authRouter from "./routes/authRouter.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
+import reviewsRouter from "./routes/reviewsRouter.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -42,6 +43,7 @@ app.use("/api/v1/bootcamps", bootcampsRouter);
 app.use("/api/v1/courses", coursesRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/reviews", reviewsRouter);
 
 app.use(errorHandler);
 
