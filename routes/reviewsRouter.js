@@ -1,5 +1,11 @@
 import express from "express";
-import { index, show, store } from "../controllers/reviewsController.js";
+import {
+  destroy,
+  index,
+  show,
+  store,
+  update,
+} from "../controllers/reviewsController.js";
 import advancedResults from "../middleware/advancedResults.js";
 import { authorize, protect } from "../middleware/auth.js";
 import Review from "../models/Review.js";
@@ -16,8 +22,10 @@ reviewsRouter
     index
   )
   .post(protect, authorize("admin", "user"), store);
-reviewsRouter.route("/:id").get(show);
-//   .put(protect, authorize("publisher", "admin"), update)
-//   .delete(protect, authorize("publisher", "admin"), destroy);
+reviewsRouter
+  .route("/:id")
+  .get(show)
+  .put(protect, authorize("user", "admin"), update)
+  .delete(protect, authorize("user", "admin"), destroy);
 
 export default reviewsRouter;
