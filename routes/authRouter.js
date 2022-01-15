@@ -3,6 +3,7 @@ import {
   forgotPassword,
   getMe,
   login,
+  logout,
   register,
   resetPassword,
   updateDetails,
@@ -15,6 +16,7 @@ const authRouter = express.Router();
 authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.get("/me", protect, getMe);
+authRouter.get("/logout", protect, logout);
 authRouter.post("/forgotpassword", forgotPassword);
 authRouter.put("/resetpassword/:resettoken", resetPassword);
 authRouter.put("/updatedetails", protect, updateDetails);
