@@ -11,7 +11,7 @@ const errorHandler = (err, req, res, next) => {
   switch (err.name) {
     case "CastError":
       // Mongoose bad ObjectI
-      message = `Bootcamp not found with id of ${err.value}`;
+      message = `Resource not found with id of ${err.value}`;
       error = new ErrorResponse(message, 404);
       break;
 
@@ -30,24 +30,6 @@ const errorHandler = (err, req, res, next) => {
     default:
       break;
   }
-
-  // Mongoose bad ObjectI
-  //   if (err.name === "CastError") {
-  //     const message = `Bootcamp not found with id of ${err.value}`;
-  //     error = new ErrorResponse(message, 404);
-  //   }
-
-  //   // Mongoose duplicate key
-  //   if (err.name === "MongoServerError") {
-  //     const message = `Duplicate value ${Object.values(err.keyValue)}`;
-  //     error = new ErrorResponse(message, 400);
-  //   }
-
-  //   // Mongoose validation error
-  //   if (err.name === "ValidationError") {
-  //     const message = Object.values(err.errors).map((value) => value.message);
-  //     error = new ErrorResponse(message, 400);
-  //   }
 
   res.status(error.statusCode || 500).json({
     success: false,
