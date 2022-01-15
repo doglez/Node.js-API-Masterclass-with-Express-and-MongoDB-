@@ -15,6 +15,9 @@ import reviewsRouter from "./routes/reviewsRouter.js";
 import mongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 import xss from "xss-clean";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
+import cors from "cors";
 
 dotenv.config({ path: "./.env" });
 
@@ -49,6 +52,19 @@ app.use(helmet());
 
 // Prevent XSS attacks
 app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+});
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
 
 // Set static folder
 const __dirname = process.cwd();
