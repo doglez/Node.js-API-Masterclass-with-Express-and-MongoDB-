@@ -66,9 +66,11 @@ export const store = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
   if (!bootcamp) {
-    new ErrorResponse(
-      `Bootcamp not found with id of ${req.params.bootcampId}`,
-      404
+    return next(
+      new ErrorResponse(
+        `Bootcamp not found with id of ${req.params.bootcampId}`,
+        404
+      )
     );
   }
 
