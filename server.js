@@ -12,6 +12,7 @@ import authRouter from "./routes/authRouter.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import reviewsRouter from "./routes/reviewsRouter.js";
+import mongoSanitize from "express-mongo-sanitize";
 
 dotenv.config({ path: "./.env" });
 
@@ -33,6 +34,13 @@ if (process.env.NODE_ENV === "development") {
 
 // File uploading
 app.use(fileUpload());
+
+// Sanitize data Prevent NoSQL Injection & Sanitize Data
+app.use(
+  mongoSanitize({
+    replaceWith: "_",
+  })
+);
 
 // Set static folder
 const __dirname = process.cwd();

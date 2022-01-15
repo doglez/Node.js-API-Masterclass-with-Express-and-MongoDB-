@@ -11,7 +11,7 @@ const errorHandler = (err, req, res, next) => {
   switch (err.name) {
     case "CastError":
       // Mongoose bad ObjectI
-      message = `Resource not found with id of ${err.value}`;
+      message = `Resource not found`;
       error = new ErrorResponse(message, 404);
       break;
 
