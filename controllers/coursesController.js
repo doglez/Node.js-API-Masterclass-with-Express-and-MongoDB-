@@ -102,10 +102,7 @@ export const store = asyncHandler(async (req, res, next) => {
  * @param {*} next
  */
 export const update = asyncHandler(async (req, res, next) => {
-  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  let course = await Course.findById(req.params.id);
 
   if (!course) {
     return next(
@@ -122,6 +119,11 @@ export const update = asyncHandler(async (req, res, next) => {
       )
     );
   }
+
+  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     success: true,
