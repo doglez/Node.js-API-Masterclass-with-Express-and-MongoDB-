@@ -154,4 +154,20 @@ BootcampSchema.virtual("courses", {
   justOne: false,
 });
 
+// Cascade delete reviews when a boocamp is deleted
+BootcampSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({
+    bootcamp: this._id,
+  });
+  next();
+});
+
+// Reverse populate with virtuals
+BootcampSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "bootcamp",
+  justOne: false,
+});
+
 export default mongoose.model("Bootcamp", BootcampSchema);
