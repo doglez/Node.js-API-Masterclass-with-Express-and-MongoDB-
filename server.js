@@ -13,6 +13,8 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
 import reviewsRouter from "./routes/reviewsRouter.js";
 import mongoSanitize from "express-mongo-sanitize";
+import helmet from "helmet";
+import xss from "xss-clean";
 
 dotenv.config({ path: "./.env" });
 
@@ -41,6 +43,12 @@ app.use(
     replaceWith: "_",
   })
 );
+
+// Set security header with helmet
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
 
 // Set static folder
 const __dirname = process.cwd();
